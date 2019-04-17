@@ -11,10 +11,9 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', 'PagesController@welcome');
+Route::get('/login', 'PagesController@login');
+Route::get('/create', 'PagesController@create');
+Route::get('/games', 'PagesController@games');
 
-Route::get('/login', function() {
-    return view('login');
-});
+Route::post('/create', 'CreateAccountController@insert');

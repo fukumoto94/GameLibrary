@@ -4,7 +4,7 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <title>Login</title>
+        <title>@yield('page', 'GameLibrary')</title>
 
         <!-- Fonts -->
         <link href="https://fonts.googleapis.com/css?family=Nunito:200,600" rel="stylesheet">
@@ -27,8 +27,7 @@
             .flex-center {
                 align-items: center;
                 display: flex;
-                justify-content: center;
-            }
+                justify-content: center;            }
 
             .position-ref {
                 position: relative;
@@ -47,8 +46,17 @@
             .title {
                 font-size: 84px;
             }
-
+            .fields {
+                color: #636b6f;
+                padding: 0 25px;
+                font-size: 13px;
+                font-weight: 600;
+                letter-spacing: .1rem;
+                text-decoration: none;
+                text-transform: uppercase;
+            }
             .links > a {
+                LINE-HEIGHT: 70px;
                 color: #636b6f;
                 padding: 0 25px;
                 font-size: 13px;
@@ -82,12 +90,13 @@
 
             <div class="content">
                 <div class="title m-b-md">
-                    Game Library
+                    @yield('title', 'Game Library')
                 </div>
-
+                <div class ="fields">
+                    @yield('fields')
+                </div>
                 <div class="links">
-                    <a href="http://127.0.0.1:8000/login">Login</a>
-                    <a href="http://127.0.0.1:8000/create">Create Account</a>
+                    @yield('links')
                 </div>
             </div>
         </div>
