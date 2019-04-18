@@ -8,7 +8,10 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable
 {
+    use Uuids;
     use Notifiable;
+
+    public $incrementing = false;
 
     /**
      * The attributes that are mass assignable.

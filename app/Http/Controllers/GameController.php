@@ -3,18 +3,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Illuminate\Database\QueryException;
+use App\Game;
+use Auth;
 
-use App\User;
-use App\Address;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Mail\Mailable;
-use App\Mail\SendMailUser;
-use Illuminate\Support\Facades\Mail;
-
-class UserController extends Controller
+class GameController extends Controller
 {
     public function _contruct(){
         $this->middleware(['auth', 'can:all']);
@@ -27,7 +19,7 @@ class UserController extends Controller
      */
      public function index()
      {
-        
+        return view('games.index', compact('games'));
      }
 
      /**
@@ -37,7 +29,8 @@ class UserController extends Controller
       */
       public function create()
       {
-       // return view('/create');
+          $game = new Game();
+          return view('games.create', compact('game'));
       }
 
       /**
@@ -46,9 +39,17 @@ class UserController extends Controller
        * @param \Illuminate\Http\Request  $request
        * @return \Illuminate\Http\Response
        */
-      public function store()
+      public function store(Request $request)
       {
+            $game = new Game();
+            $game->name = $request->name;
+            $game->description = $request->description;
+            $game->started_at = $request->started_at;
+            $game->finished_at = $request->finished_at;
+            $game->user_id = $request->user_id;
 
+            $game->save();
+            return redirect('games');
       }
 
       /**

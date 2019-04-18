@@ -11,9 +11,19 @@
 |
 */
 
+/*
 Route::get('/', 'PagesController@welcome');
 Route::get('/login', 'PagesController@login');
 Route::get('/create', 'PagesController@create');
 Route::get('/games', 'PagesController@games');
 
-Route::post('/create', 'CreateAccountController@insert');
+Route::post('/create', 'UserController@create');
+
+Route::resource('users', 'UserController');
+*/
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');
+Route::get('/create', 'UserController@create');
+
+Route::resource('/game', 'GameController');
