@@ -19,6 +19,7 @@ class GameController extends Controller
      */
      public function index()
      {
+         $games = Game::paginate(config('config.paginate'));
         return view('games.index', compact('games'));
      }
 
@@ -71,7 +72,7 @@ class GameController extends Controller
        */
       public function edit()
       {
-
+        return view('games.edit', compact('game'));
       }
 
       public function profile()

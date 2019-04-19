@@ -23,7 +23,7 @@ Route::resource('users', 'UserController');
 */
 Auth::routes();
 
+Route::get('/games/{id}/show_all', 'GameController@showAll')->name('games.showAll');
 Route::get('/home', 'HomeController@index')->name('home');
-Route::get('/create', 'UserController@create');
 
-Route::resource('/game', 'GameController');
+Route::resource('/games', 'GameController');

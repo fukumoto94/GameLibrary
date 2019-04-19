@@ -116,7 +116,7 @@ return [
         ],
         [
             'text'        => 'Add game',
-            'url'         => 'game',
+            'url'         => 'games',
             'icon'        => 'file',
             //'label'       => 4,
             'label_color' => 'success',
