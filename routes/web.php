@@ -23,7 +23,6 @@ Route::resource('users', 'UserController');
 */
 Auth::routes();
 
-Route::get('/games/{id}/show_all', 'GameController@showAll')->name('games.showAll');
 Route::get('/home', 'HomeController@index')->name('home');
 
 Route::resource('/games', 'GameController')->middleware('auth');

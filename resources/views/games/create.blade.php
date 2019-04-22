@@ -33,10 +33,12 @@
         {{ Form::label('finished_at', 'Finished') }}
         {{ Form::date('finished_at', \Carbon\Carbon::now()->addDays(30), ['class'=>"form-control"]) }}
     </div>
+
     <div class="form-group">
-        {{ Form::label('user_id', 'userId') }}
-        {{ Form::select('user_id', \App\User::orderBy('name')->pluck('name', 'id'),old('user_id'), ['class'=>"form-control"]) }}
+        {{ Form::label('user_id', 'Username') }}
+        {{ Form::text('user_id', Auth::user()->name, ['class'=>"form-control", 'readonly'=>"readonly"]) }}
     </div>
+
     {{ Form::submit('Create the game!', array('class' => 'btn btn-primary')) }}
 
 {{ Form::close() }}

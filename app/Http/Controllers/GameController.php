@@ -50,7 +50,7 @@ class GameController extends Controller
             $game->description = $request->description;
             $game->started_at = $request->started_at;
             $game->finished_at = $request->finished_at;
-            $game->user_id = $request->user_id;
+            $game->user_id = Auth::user()->id;
 
             $game->save();
             return redirect('games');

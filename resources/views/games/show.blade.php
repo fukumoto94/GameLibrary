@@ -15,6 +15,8 @@
         <h2>{{ $game->name }}</h2>
         <p>
             <strong>Description:</strong> {{ $game->description }}<br>
+            <strong>User:</strong> {{ $game->user->name }}
+
         </p>
     </div>
 
