@@ -19,8 +19,11 @@ class GameController extends Controller
      */
      public function index()
      {
-         $games = Game::paginate(config('config.paginate'));
-        return view('games.index', compact('games'));
+         //get all the games
+         $games = Game::all();
+
+         //load the view and pass the games
+        return view('games.index')->with('games', $games);
      }
 
      /**
@@ -61,7 +64,8 @@ class GameController extends Controller
        */
       public function show($id)
       {
-
+        $game = Game::find($id);
+        return view('games.show')->with('game', $game);
       }
 
       /**
@@ -70,8 +74,9 @@ class GameController extends Controller
        * @param int  $id
        * @return \Illuminate\Http\Response
        */
-      public function edit()
+      public function edit($id)
       {
+        $game = Game::findOrFail($id);
         return view('games.edit', compact('game'));
       }
 
@@ -97,9 +102,15 @@ class GameController extends Controller
        * @param int  $id
        * @return \Illuminate\Http\Response
        */
-      public function update(Request $request, $id)
+      public function update(Request $request ,$id)
       {
+        $game = Game::find($id);
+        $game->name = $request->name;
+        $game->description = $request->description;
+    
 
+        $game->save();
+        return redirect('games');
       }
 
       /**
@@ -110,6 +121,11 @@ class GameController extends Controller
        */
       public function destroy($id)
       {
+        // delete
+        $game = Game::find($id);
+        $game->delete();
 
+        // redirect
+        return redirect('games');
       }
 }
