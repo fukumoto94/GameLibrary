@@ -122,8 +122,8 @@ return [
             'label_color' => 'success',
         ],
         [
-            'text'        => 'Add',
-            'url'         => 'games/create',
+            'text'        => 'Money',
+            'url'         => 'money',
             'icon'        => 'file',
             //'label'       => 4,
             'label_color' => 'success',
