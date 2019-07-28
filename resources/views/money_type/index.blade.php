@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', 'Money')
+@section('title', 'Money Type')
 
 @section('content_header')
 @stop
@@ -10,10 +10,10 @@
         <div class="col-xs-12">
             <div class="box">
                 <div class="box-header">
-                    <h3 class="box-title">@lang('message.money')</h3>
+                    <h3 class="box-title">@lang('message.moneyType')</h3>
                     <div class="box-tools pull-right" data-toggle="tooltip" title="" data-original-title="Status">
                         <div class="btn-group" data-toggle="btn-toggle">
-                          <a href="{{route('money.create')}}"><button type="button" class="btn btn-block btn-primary btn-sm"><i class="fa fa-plus"></i></button></a>
+                          <a href="{{route('money_type.create')}}"><button type="button" class="btn btn-block btn-primary btn-sm"><i class="fa fa-plus"></i></button></a>
                         </div>
                     </div>
                 </div>
@@ -35,20 +35,18 @@
                                             @can('admin')
                                             <th  tabindex="1" aria-controls="example1">@lang('message.company')</th>
                                             @endcan
-                                            <th  width='10%' tabindex="2" aria-controls="example1">tipo</th>
                                             <th  width='10%' tabindex="4" aria-controls="example1" width='15%'>@lang('message.actions')</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @forelse ($money as $e)
+                                        @forelse ($moneyType as $e)
                                         <tr role="row" class="odd">
-                                            <td class="sorting_1" width='10%'><a href="{{route('money.edit', $e)}}">{{ $e->name }}</a></td>
+                                            <td class="sorting_1" width='10%'><a href="{{route('money_type.edit', $e)}}">{{ $e->name }}</a></td>
                                             @can('admin')
                                             @endcan
-                                            <td class="sorting_1"><a href="{{route('money.edit', $e)}}">{{ $e->equipmentType->name }}</a></td>
                                             <td class="sorting_1"  align="center">
-                                                <a href="{{route('money.edit', $e)}}" class="btn btn-sm btn-primary" ><i class="fa fa-edit"></i></a>
-                                                {{ Form::open(['route' => ['money.destroy', $e], 'method' => 'delete', 'style'=>'display:inline']) }}
+                                                <a href="{{route('money_type.edit', $e)}}" class="btn btn-sm btn-primary" ><i class="fa fa-edit"></i></a>
+                                                {{ Form::open(['route' => ['money_type.destroy', $e], 'method' => 'delete', 'style'=>'display:inline']) }}
                                                     <button class='btn btn-sm btn-danger'><i class="fa fa-trash"></i></button>
                                                 {{ Form::close()}}
                                             </td>
@@ -63,7 +61,7 @@
                         <div class="row">
                             <div class="col-sm-12">
                                 <div class="dataTables_paginate paging_simple_numbers" id="example1_paginate">
-                                    {{ $money->links()}}
+                                    {{ $moneyType->links()}}
                                 </div>
                             </div>
                          </div>

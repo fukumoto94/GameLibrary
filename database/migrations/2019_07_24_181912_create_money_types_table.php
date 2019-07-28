@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateMoneyTable extends Migration
+class CreateMoneyTypesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,17 +13,13 @@ class CreateMoneyTable extends Migration
      */
     public function up()
     {
-        Schema::create('money', function (Blueprint $table) {
+        Schema::create('money_types', function (Blueprint $table) {
             $table->uuid('id');
-            $table->uuid('money_type_id')->nullable();
-            $table->unsignedInteger('accout_balance');
+            $table->string('name');
             $table->timestamps();
 
             $table->primary('id');
-            $table->foreign('money_type_id')->references('id')->on('money_types');
-
         });
-
     }
 
     /**
@@ -33,6 +29,6 @@ class CreateMoneyTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('money');
+        Schema::dropIfExists('money_types');
     }
 }

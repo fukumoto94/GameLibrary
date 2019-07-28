@@ -2,16 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\MoneyType;
 use Illuminate\Http\Request;
-use App\Money;
-use Auth;
 
-class MoneyController extends Controller
+class MoneyTypeController extends Controller
 {
-    public function _contruct(){
-        $this->middleware(['auth', 'can:all']);
-    }
-
     /**
      * Display a listing of the resource.
      *
@@ -19,9 +14,8 @@ class MoneyController extends Controller
      */
     public function index()
     {
-        //$money = Money::all();
-        $money = Money::paginate(config('config.paginate'));
-        return view('money.index', compact('money'));
+        $moneyType = MoneyType::paginate(config('config.paginate'));
+        return view('money_type.index', compact('moneyType'));
     }
 
     /**
@@ -31,7 +25,8 @@ class MoneyController extends Controller
      */
     public function create()
     {
-        //
+        $moneyType = new MoneyType();
+        return view('money_type.create', compact('moneyType'));
     }
 
     /**
@@ -42,16 +37,20 @@ class MoneyController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $moneyType = new MoneyType();
+        $moneyType->name = $request->name;
+        $moneyType->save();
+
+        return redirect('money_type');
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Money  $money
+     * @param  \App\MoneyType  $moneyType
      * @return \Illuminate\Http\Response
      */
-    public function show(Money $money)
+    public function show(MoneyType $moneyType)
     {
         //
     }
@@ -59,10 +58,10 @@ class MoneyController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Money  $money
+     * @param  \App\MoneyType  $moneyType
      * @return \Illuminate\Http\Response
      */
-    public function edit(Money $money)
+    public function edit(MoneyType $moneyType)
     {
         //
     }
@@ -71,10 +70,10 @@ class MoneyController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Money  $money
+     * @param  \App\MoneyType  $moneyType
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Money $money)
+    public function update(Request $request, MoneyType $moneyType)
     {
         //
     }
@@ -82,10 +81,10 @@ class MoneyController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Money  $money
+     * @param  \App\MoneyType  $moneyType
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Money $money)
+    public function destroy(MoneyType $moneyType)
     {
         //
     }

@@ -115,7 +115,7 @@ return [
             'can'  => 'manage-blog',
         ],
         [
-            'text'        => 'Games',
+            'text'        => 'Game',
             'url'         => 'games',
             'icon'        => 'file',
             //'label'       => 4,
@@ -124,6 +124,13 @@ return [
         [
             'text'        => 'Money',
             'url'         => 'money',
+            'icon'        => 'file',
+            //'label'       => 4,
+            'label_color' => 'success',
+        ],
+        [
+            'text'        => 'Money type',
+            'url'         => 'money_type',
             'icon'        => 'file',
             //'label'       => 4,
             'label_color' => 'success',

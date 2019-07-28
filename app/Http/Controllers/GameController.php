@@ -14,7 +14,7 @@ class GameController extends Controller
 
     /**
      * Display a listing of the resource.
-     * 
+     *
      * @return \Illuminate\Http\Response
      */
      public function index()
@@ -39,7 +39,7 @@ class GameController extends Controller
 
       /**
        * Store a newly created resource in storage.
-       * 
+       *
        * @param \Illuminate\Http\Request  $request
        * @return \Illuminate\Http\Response
        */
@@ -58,7 +58,7 @@ class GameController extends Controller
 
       /**
        * Display the specified resource.
-       * 
+       *
        * @param int  $id
        * @return \Illuminate\Http\Response
        */
@@ -70,7 +70,7 @@ class GameController extends Controller
 
       /**
        * Show the form for edititing the specified resource.
-       * 
+       *
        * @param int  $id
        * @return \Illuminate\Http\Response
        */
@@ -84,7 +84,7 @@ class GameController extends Controller
       {
 
       }
-      
+
       public function changePassword(Request $request)
       {
 
@@ -97,7 +97,7 @@ class GameController extends Controller
 
       /**
        * Update the specified resource in storage.
-       * 
+       *
        * @param \Illuminate\Http\Request  $request
        * @param int  $id
        * @return \Illuminate\Http\Response
@@ -107,7 +107,7 @@ class GameController extends Controller
         $game = Game::find($id);
         $game->name = $request->name;
         $game->description = $request->description;
-    
+
 
         $game->save();
         return redirect('games');
@@ -115,7 +115,7 @@ class GameController extends Controller
 
       /**
        * Remove the specified resource from storage.
-       * 
+       *
        * @param int  $id
        * @return \Illuminate\Http\Response
        */

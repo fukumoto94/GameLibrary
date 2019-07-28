@@ -6,5 +6,15 @@ use Illuminate\Database\Eloquent\Model;
 
 class Money extends Model
 {
-    //
+    use Uuids;
+    public $incrementing = false;
+
+    protected $fillable = [
+
+
+    ];
+
+    public function user(){
+        return $this->belongsTo('App\User');
+    }
 }

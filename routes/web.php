@@ -24,5 +24,6 @@ Route::resource('users', 'UserController');
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
-Route::resource('/money,', 'MoneyController')->middleware('auth');;
+Route::resource('/money', 'MoneyController')->middleware('auth');;
+Route::resource('/money_type', 'MoneyTypeController')->middleware('auth');;
 Route::resource('/games', 'GameController')->middleware('auth');
