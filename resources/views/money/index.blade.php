@@ -31,22 +31,30 @@
                                 <table id="example1" class="table table-bordered table-striped dataTable" role="grid" aria-describedby="example1_info">
                                     <thead>
                                         <tr role="row">
-                                            <th width='50%' tabindex="0" aria-controls="example1">@lang('message.name')</th>
-                                            @can('admin')
-                                            <th  tabindex="1" aria-controls="example1">@lang('message.company')</th>
-                                            @endcan
-                                            <th  width='10%' tabindex="2" aria-controls="example1">tipo</th>
-                                            <th  width='10%' tabindex="4" aria-controls="example1" width='15%'>@lang('message.actions')</th>
+                                                <th tabindex="0" aria-controls="example1">DATE</th>
+
+                                            @forelse ($moneyType as $type)
+                                                <th tabindex="2" aria-controls="example1">{{$type->name}}</th>
+                                            @empty
+                                            @endforelse
+                                            <th tabindex="4" aria-controls="example1" width='5%'>@lang('message.actions')</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         @forelse ($money as $e)
                                         <tr role="row" class="odd">
-                                            <td class="sorting_1" width='10%'><a href="{{route('money.edit', $e)}}">{{ $e->name }}</a></td>
-                                            @can('admin')
-                                            @endcan
-                                            <td class="sorting_1"><a href="{{route('money.edit', $e)}}">{{ $e->equipmentType->name }}</a></td>
-                                            <td class="sorting_1"  align="center">
+                                                <td class="sorting_1"><a class="">
+                                                    {{\Carbon\Carbon::parse($e->started_at)->format('d/m/y')}}
+                                                </a></td>
+
+                                            @forelse ($moneyType as $type)
+                                                <td class="sorting_1 "><a class="{{$e->id}}{{$type->id}}"></a></td>
+
+                                            @empty
+
+                                            @endforelse
+                                            <td class="sorting_1"><a href="{{route('money.edit', $e)}}">{{ $e->name }}</a></td>
+                                            <td class="sorting_1">
                                                 <a href="{{route('money.edit', $e)}}" class="btn btn-sm btn-primary" ><i class="fa fa-edit"></i></a>
                                                 {{ Form::open(['route' => ['money.destroy', $e], 'method' => 'delete', 'style'=>'display:inline']) }}
                                                     <button class='btn btn-sm btn-danger'><i class="fa fa-trash"></i></button>
@@ -63,7 +71,7 @@
                         <div class="row">
                             <div class="col-sm-12">
                                 <div class="dataTables_paginate paging_simple_numbers" id="example1_paginate">
-                                    {{ $money->links()}}
+                                   <!--{ { $money->links()}}-->
                                 </div>
                             </div>
                          </div>
@@ -72,4 +80,44 @@
             </div>
         </div>
     </div>
+    @include('includes.modal')
 @stop
+
+@section('js')
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+<script>
+
+    console.log($('.value').html());
+    function setTypes($types){
+        $types.forEach(type => {
+            var moneyId = type[0];
+            var typeId = type[1];
+            var typeValue = type[2];
+
+            $('.'+moneyId+typeId).html(typeValue)
+        });
+    }
+
+
+    var getTypes = function(e) {
+        var urlStatus = "{{ url('/money/') }}/"+{!! $money !!}[e]['id']+"/types";
+        $.ajax({
+            type:'GET',
+            url: urlStatus,
+            timeout: 5000,
+            success:function(data){
+                setTypes(data);
+            },
+            error:function () {
+                console.log("Sem acesso ao server.");
+            }
+        });
+    }
+    getTypes(0);
+    getTypes(1);
+    for (let i = 0; i < {!! $money !!}.length; i++) {
+        getTypes(i);
+    }
+</script>
+@endsection

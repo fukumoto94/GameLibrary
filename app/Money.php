@@ -17,4 +17,8 @@ class Money extends Model
     public function user(){
         return $this->belongsTo('App\User');
     }
+
+    public function moneyType(){
+        return $this->hasMany('App\MoneyType');
+    }
 }

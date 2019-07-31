@@ -4,11 +4,13 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Money;
+use App\MoneyType;
 use Auth;
 
 class MoneyController extends Controller
 {
-    public function _contruct(){
+    public function _contruct()
+    {
         $this->middleware(['auth', 'can:all']);
     }
 
@@ -20,10 +22,30 @@ class MoneyController extends Controller
     public function index()
     {
         //$money = Money::all();
-        $money = Money::paginate(config('config.paginate'));
-        return view('money.index', compact('money'));
+        $money = Money::whereNull('parent_id')->get();
+        //$money = Money::all();
+        $moneyType = MoneyType::orderBy('name')->get();
+        return view('money.index', compact('money', 'moneyType'));
     }
 
+    public function types($id)
+    {
+        $money = Money::find($id);
+        $moneyTypes = Money::where('parent_id', $money->id)->get();
+
+        $typesArray = array();
+
+        foreach ($moneyTypes as $t) {
+            $types = [
+                $t->parent_id,
+                $t->money_type_id,
+                $t->account_balance
+            ];
+            array_push($typesArray, $types);
+        }
+
+        return response()->json($typesArray, 200);
+    }
     /**
      * Show the form for creating a new resource.
      *
@@ -31,7 +53,9 @@ class MoneyController extends Controller
      */
     public function create()
     {
-        //
+        $money = new Money();
+        $moneyType = MoneyType::orderBy('name')->get();
+        return view('money.create', compact('money', 'moneyType'));
     }
 
     /**
@@ -42,7 +66,24 @@ class MoneyController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $moneyType = MoneyType::all();
+        $money = new Money();
+        $money->save();
+
+        $parentId = $money->id;
+
+        foreach ($moneyType as $type) {
+            $typeId = 'id' . $type->id;
+            $typeAccountBalance = 'account_balance' . $type->id;
+
+            $money = new Money();
+            $money->money_type_id = $request->$typeId;
+            $money->account_balance = $request->$typeAccountBalance;
+            $money->parent_id = $parentId;
+            $money->save();
+        }
+
+        return redirect('money');
     }
 
     /**

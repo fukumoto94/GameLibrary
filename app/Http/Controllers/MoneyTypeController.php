@@ -61,9 +61,10 @@ class MoneyTypeController extends Controller
      * @param  \App\MoneyType  $moneyType
      * @return \Illuminate\Http\Response
      */
-    public function edit(MoneyType $moneyType)
+    public function edit($id)
     {
-        //
+        $moneyType = MoneyType::find($id);
+        return view('money_type.edit', compact('moneyType'));
     }
 
     /**
@@ -73,9 +74,13 @@ class MoneyTypeController extends Controller
      * @param  \App\MoneyType  $moneyType
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, MoneyType $moneyType)
+    public function update(Request $request, $id)
     {
-        //
+        $moneyType = MoneyType::find($id);
+        $moneyType->name = $request->name;
+        $moneyType->save();
+
+        return redirect('money_type');
     }
 
     /**
@@ -84,8 +89,19 @@ class MoneyTypeController extends Controller
      * @param  \App\MoneyType  $moneyType
      * @return \Illuminate\Http\Response
      */
-    public function destroy(MoneyType $moneyType)
+    public function destroy($id)
     {
-        //
+        try {
+            $moneyType = MoneyType::findOrFail($id);
+            $moneyType->delete();
+        }
+        catch (QueryException  $e) {
+            return redirect('money_type')->with("error", trans('message.no_delete_record'));
+        }
+        catch(ModelNotFoundException $e) {
+            return redirect('money_type')->with("error", trans('message.no_record_found'));
+        }
+
+        return redirect('money_type');
     }
 }

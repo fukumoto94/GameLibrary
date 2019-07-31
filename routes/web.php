@@ -27,3 +27,6 @@ Route::get('/home', 'HomeController@index')->name('home');
 Route::resource('/money', 'MoneyController')->middleware('auth');;
 Route::resource('/money_type', 'MoneyTypeController')->middleware('auth');;
 Route::resource('/games', 'GameController')->middleware('auth');
+Route::get('/money/{id}/types', 'MoneyController@types')->name('money.types');
+
+

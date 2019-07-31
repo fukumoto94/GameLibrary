@@ -15,7 +15,7 @@ class CreateMoneyTypesTable extends Migration
     {
         Schema::create('money_types', function (Blueprint $table) {
             $table->uuid('id');
-            $table->string('name');
+            $table->string('name')->nullable();
             $table->timestamps();
 
             $table->primary('id');

@@ -1,48 +1,33 @@
 @extends('adminlte::page')
 
-@section('title', 'Games')
+@section('title', 'AdminLTE')
 
 @section('content_header')
 @stop
 
 @section('content')
-<body>
-<div class="container">
-
-<h1>Create a game</h1>
-
-<!-- if there are creation errors, they will show here -->
-{{ HTML::ul($errors->all()) }}
-
-{{ Form::open(array('url' => 'games')) }}
-
-    <div class="form-group">
-        {{ Form::label('name', 'Name') }}
-        {{ Form::text('name', Input::old('name'), array('class' => 'form-control')) }}
+<div class="col-md-12">
+  <div class="box box-primary">
+    <div class="box-header with-border">
+      <h3 class="box-title">@lang('message.new_money')</h3>
     </div>
+    {!!Form::model($money, ['route' => ['money.store', $money]])!!}
+    @forelse ($moneyType as $m)
+        <div class="form-group col-md-12">
+            <label for="name">{{$m->name}}</label>
+            <input type="text" class="form-control"  placeholder="{{__('message.name')}}" name="account_balance{{$m->id}}" value="{{old('name')}}">
+            <input type='hidden' name="id{{$m->id}}" value='{{$m->id}}'>
+        </div>
 
-    <div class="form-group">
-        {{ Form::label('description', 'Description') }}
-        {{ Form::text('description', Input::old('description'), array('class' => 'form-control')) }}
-    </div>
-    <div class="form-group">
-        {{ Form::label('started_at', 'Start') }}
-        {{ Form::date('started_at', \Carbon\Carbon::now(), ['class'=>"form-control"])}}
-    </div>
-    <div class="form-group">
-        {{ Form::label('finished_at', 'Finished') }}
-        {{ Form::date('finished_at', \Carbon\Carbon::now()->addDays(30), ['class'=>"form-control"]) }}
-    </div>
+    @empty
+        <tr><td colspan="2" class='text-center bg-yellow'>@lang('message.no_records_found')</td></tr>
+    @endforelse
+    <div class="box-footer">
+            <button type="submit" class="btn btn-primary">@lang('message.save')</button>
+        </div>
+    {!!Form::close()!!}
 
-    <div class="form-group">
-        {{ Form::label('user_id', 'Username') }}
-        {{ Form::text('user_id', Auth::user()->name, ['class'=>"form-control", 'readonly'=>"readonly"]) }}
-    </div>
 
-    {{ Form::submit('Create the game!', array('class' => 'btn btn-primary')) }}
-
-{{ Form::close() }}
-
+  </div>
 </div>
-</body>
 @stop

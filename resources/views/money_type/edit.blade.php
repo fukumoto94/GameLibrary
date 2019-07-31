@@ -1,36 +1,27 @@
 @extends('adminlte::page')
 
-@section('title', 'Games')
+@section('title', 'AdminLTE')
 
 @section('content_header')
 @stop
 
 @section('content')
-
-<body>
-<div class="container">
-
-<h1>Edit: {{ $game->name }}</h1>
-
-<!-- if there are creation errors, they will show here -->
-{{ HTML::ul($errors->all()) }}
-
-{{ Form::model($game, array('route' => array('games.update', $game->id), 'method' => 'PUT')) }}
-
-    <div class="form-group">
-        {{ Form::label('name', 'Name') }}
-        {{ Form::text('name', null, array('class' => 'form-control')) }}
+<div class="col-md-12">
+  <div class="box box-primary">
+    <div class="box-header with-border">
+      <h3 class="box-title">@lang('message.edit_money_type')</h3>
     </div>
-
-    <div class="form-group">
-        {{ Form::label('description', 'Description') }}
-        {{ Form::text('description', null, array('class' => 'form-control')) }}
+    {!! Form::model($moneyType,['method' => 'PATCH','route' => ['money_type.update', $moneyType]]) !!}
+    <div class="box-body">
+      <div class="form-group">
+        <label for="name">@lang('message.name')</label>
+        <input type="text" class="form-control" id="name" placeholder="{{__('message.name')}}" name="name" value="{{ $moneyType->name  }}">
+      </div>
+      <div class="box-footer">
+        <button type="submit" class="btn btn-primary">@lang('message.save')</button>
+      </div>
+      {!!Form::close()!!}
     </div>
-
-    {{ Form::submit('Edit the game!', array('class' => 'btn btn-primary')) }}
-
-{{ Form::close() }}
-
+  </div>
 </div>
-</body>
 @stop

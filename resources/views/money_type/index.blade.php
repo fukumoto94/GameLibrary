@@ -39,20 +39,16 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @forelse ($moneyType as $e)
+                                        @forelse ($moneyType as $c)
                                         <tr role="row" class="odd">
-                                            <td class="sorting_1" width='10%'><a href="{{route('money_type.edit', $e)}}">{{ $e->name }}</a></td>
-                                            @can('admin')
-                                            @endcan
-                                            <td class="sorting_1"  align="center">
-                                                <a href="{{route('money_type.edit', $e)}}" class="btn btn-sm btn-primary" ><i class="fa fa-edit"></i></a>
-                                                {{ Form::open(['route' => ['money_type.destroy', $e], 'method' => 'delete', 'style'=>'display:inline']) }}
-                                                    <button class='btn btn-sm btn-danger'><i class="fa fa-trash"></i></button>
-                                                {{ Form::close()}}
+                                            <td class="sorting_1" ><a href="{{route('money_type.edit', $c)}}">{{ $c->name }}</a></td>
+                                            <td class="sorting_1" width='10%'>
+                                                <a href="{{route('money_type.edit', $c)}}" class="btn btn-xs btn-primary" ><i class="fa fa-edit"></i></a>
+                                                <button class='btn btn-xs btn-danger' data-toggle='modal' data-target='#modalExcludeConfirm' data-link="{{route('money_type.destroy', $c)}}" data-text='{{$c->name}}'><i class="fa fa-trash"></i></button>
                                             </td>
                                         </tr>
                                         @empty
-                                            <tr><td colspan="5" class='text-center bg-yellow'>@lang('message.no_records_found')</td></tr>
+                                            <tr><td colspan="2" class='text-center bg-yellow'>@lang('message.no_records_found')</td></tr>
                                         @endforelse
                                     </tbody>
                                 </table>
@@ -70,4 +66,5 @@
             </div>
         </div>
     </div>
+    @include('includes.modal')
 @stop
