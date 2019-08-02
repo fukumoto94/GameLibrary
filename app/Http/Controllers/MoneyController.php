@@ -22,7 +22,7 @@ class MoneyController extends Controller
     public function index()
     {
         //$money = Money::all();
-        $money = Money::whereNull('parent_id')->get();
+        $money = Money::orderBy('created_at')->whereNull('parent_id')->get();
         //$money = Money::all();
         $moneyType = MoneyType::orderBy('name')->get();
         return view('money.index', compact('money', 'moneyType'));
@@ -32,14 +32,17 @@ class MoneyController extends Controller
     {
         $money = Money::find($id);
         $moneyTypes = Money::where('parent_id', $money->id)->get();
+        $date =  \Carbon\Carbon::parse($money->created_at)->format('d/m/y');
+
 
         $typesArray = array();
 
         foreach ($moneyTypes as $t) {
             $types = [
-                $t->parent_id,
-                $t->money_type_id,
-                $t->account_balance
+                'moneyId'         => $t->parent_id,
+                'moneyTypeId'     => $t->money_type_id,
+                $t->money_type_id => $t->account_balance,
+                'date'            => $date
             ];
             array_push($typesArray, $types);
         }

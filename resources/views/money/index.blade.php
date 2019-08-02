@@ -37,23 +37,20 @@
                                                 <th tabindex="2" aria-controls="example1">{{$type->name}}</th>
                                             @empty
                                             @endforelse
+                                            <th tabindex="4" aria-controls="example1" width='5%'>Toda grana</th>
                                             <th tabindex="4" aria-controls="example1" width='5%'>@lang('message.actions')</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         @forelse ($money as $e)
                                         <tr role="row" class="odd">
-                                                <td class="sorting_1"><a class="">
-                                                    {{\Carbon\Carbon::parse($e->started_at)->format('d/m/y')}}
-                                                </a></td>
+                                                <td class="sorting_1"><a class="startDate-{{$e->id}}"></a></td>
 
                                             @forelse ($moneyType as $type)
                                                 <td class="sorting_1 "><a class="{{$e->id}}{{$type->id}}"></a></td>
-
                                             @empty
-
                                             @endforelse
-                                            <td class="sorting_1"><a href="{{route('money.edit', $e)}}">{{ $e->name }}</a></td>
+                                            <td class="sorting_1"><a class="totalValue-{{$e->id}}">{{ $e->name }}</a></td>
                                             <td class="sorting_1">
                                                 <a href="{{route('money.edit', $e)}}" class="btn btn-sm btn-primary" ><i class="fa fa-edit"></i></a>
                                                 {{ Form::open(['route' => ['money.destroy', $e], 'method' => 'delete', 'style'=>'display:inline']) }}
@@ -64,6 +61,14 @@
                                         @empty
                                             <tr><td colspan="5" class='text-center bg-yellow'>@lang('message.no_records_found')</td></tr>
                                         @endforelse
+                                        <tr role="row" class="odd">
+                                            <td class="sorting_1"><a>Lucro</a></td>
+                                            @forelse ($moneyType as $type)
+                                                <td class="sorting_1 "><a class="{{$type->id}}"></a></td>
+                                            @empty
+                                            @endforelse
+
+                                        </tr>
                                     </tbody>
                                 </table>
                             </div>
@@ -87,18 +92,30 @@
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
 <script>
-
-    console.log($('.value').html());
     function setTypes($types){
+        var totalValue = 0;
         $types.forEach(type => {
-            var moneyId = type[0];
-            var typeId = type[1];
-            var typeValue = type[2];
+            var moneyId = type['moneyId'];
+            var typeId = type['moneyTypeId'];
+            var typeValue = type[typeId];
+            totalValue+=typeValue;
 
-            $('.'+moneyId+typeId).html(typeValue)
+            $('.'+moneyId+typeId).html(typeValue);
+
+
+            var typeTotalValue = (Number($('.'+typeId).html()) - Number($('.'+moneyId+typeId).html())) * -1;
+
+            $('.'+typeId).html(typeTotalValue);
         });
-    }
+        $('.totalValue-'+$types[0]['moneyId']).html(totalValue);
+        $('.startDate-'+$types[0]['moneyId']).html($types[0]['date']);
+       // $('.'+$)
 
+        /*
+        var negative = -23,
+    positive = -negative>0 ? -negative : negative;
+        */
+    }
 
     var getTypes = function(e) {
         var urlStatus = "{{ url('/money/') }}/"+{!! $money !!}[e]['id']+"/types";
@@ -114,8 +131,7 @@
             }
         });
     }
-    getTypes(0);
-    getTypes(1);
+
     for (let i = 0; i < {!! $money !!}.length; i++) {
         getTypes(i);
     }
