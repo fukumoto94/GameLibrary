@@ -42,6 +42,23 @@
                                         </tr>
                                     </thead>
                                     <tbody>
+                                            <tr role="row" class="odd">
+                                                    <td class="sorting_1"><a>Lucro Total</a></td>
+                                                    @forelse ($moneyType as $type)
+                                                        <td class="sorting_1 "><a class="total-gain-{{$type->id}}"></a></td>
+                                                    @empty
+                                                    @endforelse
+                                                    <td class="sorting_1"><a class="total-allgain"></a></td>
+                                                </tr>
+                                            <tr role="row" class="odd">
+                                                    <td class="sorting_1"><a>Lucro</a></td>
+                                                    @forelse ($moneyType as $type)
+                                                        <td class="sorting_1 "><a class="gain-{{$type->id}}"></a></td>
+                                                    @empty
+                                                    @endforelse
+                                                    <td class="sorting_1"><a class="allgain"></a></td>
+                                                </tr>
+
                                         @forelse ($money as $e)
                                         <tr role="row" class="odd">
                                                 <td class="sorting_1"><a class="startDate-{{$e->id}}"></a></td>
@@ -61,14 +78,6 @@
                                         @empty
                                             <tr><td colspan="5" class='text-center bg-yellow'>@lang('message.no_records_found')</td></tr>
                                         @endforelse
-                                        <tr role="row" class="odd">
-                                            <td class="sorting_1"><a>Lucro</a></td>
-                                            @forelse ($moneyType as $type)
-                                                <td class="sorting_1 "><a class="{{$type->id}}"></a></td>
-                                            @empty
-                                            @endforelse
-
-                                        </tr>
                                     </tbody>
                                 </table>
                             </div>
@@ -92,29 +101,29 @@
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
 <script>
-    function setTypes($types){
+    function setTypes(types){
         var totalValue = 0;
-        $types.forEach(type => {
-            var moneyId = type['moneyId'];
-            var typeId = type['moneyTypeId'];
-            var typeValue = type[typeId];
+        types.forEach(type => {
+            var moneyId = type[0];
+            var typeId = type[1];
+            var typeValue = type[2];
             totalValue+=typeValue;
 
-            $('.'+moneyId+typeId).html(typeValue);
-
-
-            var typeTotalValue = (Number($('.'+typeId).html()) - Number($('.'+moneyId+typeId).html())) * -1;
-
-            $('.'+typeId).html(typeTotalValue);
+            $('.'+moneyId+typeId).text(typeValue);
         });
-        $('.totalValue-'+$types[0]['moneyId']).html(totalValue);
-        $('.startDate-'+$types[0]['moneyId']).html($types[0]['date']);
-       // $('.'+$)
+        $('.totalValue-'+types[0][0]).text(totalValue);
+        $('.startDate-'+types[0][0]).text(types[0][3]);
 
+
+       // $('.'+$)
         /*
         var negative = -23,
     positive = -negative>0 ? -negative : negative;
         */
+
+       //$('.lucro-total'+firsMoney[])
+
+
     }
 
     var getTypes = function(e) {
@@ -128,12 +137,53 @@
             },
             error:function () {
                 console.log("Sem acesso ao server.");
+            },
+            complete:function(data){
             }
+
         });
     }
+    $( document ).ajaxStop(function() {
+        if({!! $moneyLen !!} > 0){
+            $('.total-allgain').text(
+            parseInt($('.totalValue-'+{!! $money !!}[0]['id']).text()) -
+            parseInt($('.totalValue-'+{!! $money !!}[{!! $moneyLen !!}-1]['id']).text())
+        );
+        $('.allgain').text(
+            parseInt($('.totalValue-'+{!! $money !!}[0]['id']).text()) -
+            parseInt($('.totalValue-'+{!! $money !!}[1]['id']).text())
+        );
+        }
+   });
 
     for (let i = 0; i < {!! $money !!}.length; i++) {
         getTypes(i);
     }
+    var getGains = function(){
+        $.ajax({
+            type: "GET",
+            url: "{{ url('/ajaxRequest') }}",
+            timeout: 5000,
+            dataType: "json",
+            success:function(data){
+                setGains(data);
+            },
+            error:function(){
+                console.log("Sem acesso json");
+            }
+        });
+    }
+    setInterval(getGains(), 1000);
+
+
+    function setGains(gains){
+        gains['total'].forEach(gain => {
+            $('.total-gain-'+gain['id']).text(gain['value']);
+        });
+        gains['last'].forEach(gain => {
+            $('.gain-'+gain['id']).text(gain['value']);
+        });
+    }
+
 </script>
 @endsection

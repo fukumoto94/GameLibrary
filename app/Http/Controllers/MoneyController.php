@@ -5,8 +5,6 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Money;
 use App\MoneyType;
-use Auth;
-
 class MoneyController extends Controller
 {
     public function _contruct()
@@ -22,10 +20,80 @@ class MoneyController extends Controller
     public function index()
     {
         //$money = Money::all();
-        $money = Money::orderBy('created_at')->whereNull('parent_id')->get();
+        $money = Money::orderBy('created_at', 'DESC')->whereNull('parent_id')->get();
         //$money = Money::all();
         $moneyType = MoneyType::orderBy('name')->get();
-        return view('money.index', compact('money', 'moneyType'));
+        $moneyLen = count($money);
+        return view('money.index', compact('money', 'moneyType', 'moneyLen'));
+    }
+
+    public function ajaxRequest(){
+        $money       = Money::orderBy('created_at')->whereNull('parent_id')->get();
+        $moneyType     = MoneyType::all();
+
+        $last        = Money::where('parent_id', $money[count($money) - 2]['id'])->get();
+        $lastCreated = Money::where('parent_id', $money[count($money) - 1]['id'])->get();
+        $totalGains = array();
+
+        foreach ($moneyType as $t) {
+            $value = Money::orderBy('created_at')->where('money_type_id', $t->id)
+                                        ->whereNotNull('account_balance')->get();
+
+            $valueLast = Money::orderBy('created_at', 'DESC')->where('money_type_id', $t->id)
+                                        ->whereNotNull('account_balance')->get();
+
+            if(count($value) <= 0 ){
+                array_push($totalGains,
+                ([
+                    'id' => $t->id,
+                    'value' => 0
+                ]));
+            }
+            elseif(count($valueLast) > 0){
+                array_push($totalGains,
+                ([
+                    'id' => $t->id,
+                    'value' => $valueLast[0]['account_balance'] - $value[0]['account_balance']
+                ]));
+            }
+
+
+        }
+
+        $lastGains  = array();
+        for ($i = 0; $i < count($moneyType); $i++) {
+            if(count($lastCreated) == count($moneyType) && count($last) == count($moneyType)){
+                array_push($lastGains,
+                ([
+                    'id'    => $lastCreated[$i]['money_type_id'],
+                    'value' => $lastCreated[$i]['account_balance'] - $last[$i]['account_balance']
+                ]));
+            } elseif(count($lastCreated) == count($moneyType)){
+                array_push($lastGains,
+                ([
+                    'id'    => $lastCreated[$i]['money_type_id'],
+                    'value' => $lastCreated[$i]['account_balance']
+                ]));
+            } elseif(count($last) == count($moneyType)){
+                array_push($lastGains,
+                ([
+                    'id'    => $lastCreated[$i]['money_type_id'],
+                    'value' => $last[$i]['account_balance']
+                ]));
+            } else{
+                array_push($lastGains,
+                ([
+                    'id'    => $lastCreated[$i]['money_type_id'],
+                    'value' => 0
+                ]));
+            }
+
+        }
+
+        $gains = ['total' => $totalGains,
+                  'last'  => $lastGains
+                ];
+        return response()->json($gains, 200);
     }
 
     public function types($id)
@@ -34,15 +102,14 @@ class MoneyController extends Controller
         $moneyTypes = Money::where('parent_id', $money->id)->get();
         $date =  \Carbon\Carbon::parse($money->created_at)->format('d/m/y');
 
-
         $typesArray = array();
 
         foreach ($moneyTypes as $t) {
             $types = [
-                'moneyId'         => $t->parent_id,
-                'moneyTypeId'     => $t->money_type_id,
-                $t->money_type_id => $t->account_balance,
-                'date'            => $date
+                $t->parent_id,
+                $t->money_type_id,
+                $t->account_balance,
+                $date
             ];
             array_push($typesArray, $types);
         }
@@ -80,6 +147,7 @@ class MoneyController extends Controller
             $typeAccountBalance = 'account_balance' . $type->id;
 
             $money = new Money();
+            $money->user_id = auth()->user()->id;
             $money->money_type_id = $request->$typeId;
             $money->account_balance = $request->$typeAccountBalance;
             $money->parent_id = $parentId;

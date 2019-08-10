@@ -15,13 +15,15 @@ class CreateMoneyTable extends Migration
     {
         Schema::create('money', function (Blueprint $table) {
             $table->uuid('id');
+            $table->uuid('user_id')->nullable();
             $table->uuid('money_type_id')->nullable();
             $table->uuid('parent_id')->nullable();
-            $table->unsignedInteger('account_balance')->nullable();
+            $table->unsignedInteger('account_balance')->nullable()->default(0);
             $table->timestamps();
 
             $table->primary('id');
             $table->foreign('money_type_id')->references('id')->on('money_types');
+            $table->foreign('user_id')->references('id')->on('users');
 
         });
 
