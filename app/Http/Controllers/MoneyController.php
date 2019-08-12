@@ -21,10 +21,11 @@ class MoneyController extends Controller
     {
         //$money = Money::all();
         $money = Money::orderBy('created_at', 'DESC')->whereNull('parent_id')->get();
+        $moneyChild = Money::orderBy('created_at', 'DESC')->whereNotNull('parent_id')->get();
         //$money = Money::all();
         $moneyType = MoneyType::orderBy('name')->get();
         $moneyLen = count($money);
-        return view('money.index', compact('money', 'moneyType', 'moneyLen'));
+        return view('money.index', compact('money', 'moneyType', 'moneyLen', 'moneyChild'));
     }
 
     public function ajaxRequest(){
@@ -34,6 +35,7 @@ class MoneyController extends Controller
         $last        = Money::where('parent_id', $money[count($money) - 2]['id'])->get();
         $lastCreated = Money::where('parent_id', $money[count($money) - 1]['id'])->get();
         $totalGains = array();
+        $lastGains  = array();
 
         foreach ($moneyType as $t) {
             $value = Money::orderBy('created_at')->where('money_type_id', $t->id)
@@ -48,6 +50,11 @@ class MoneyController extends Controller
                     'id' => $t->id,
                     'value' => 0
                 ]));
+                array_push($lastGains,
+                ([
+                    'id' => $t->id,
+                    'value' => 0
+                ]));
             }
             elseif(count($valueLast) > 0){
                 array_push($totalGains,
@@ -55,12 +62,16 @@ class MoneyController extends Controller
                     'id' => $t->id,
                     'value' => $valueLast[0]['account_balance'] - $value[0]['account_balance']
                 ]));
+                array_push($lastGains,
+                ([
+                    'id' => $t->id,
+                    'value' => $valueLast[0]['account_balance'] - $valueLast[1]['account_balance']
+                ]));
             }
 
 
         }
-
-        $lastGains  = array();
+/*
         for ($i = 0; $i < count($moneyType); $i++) {
             if(count($lastCreated) == count($moneyType) && count($last) == count($moneyType)){
                 array_push($lastGains,
@@ -89,7 +100,7 @@ class MoneyController extends Controller
             }
 
         }
-
+*/
         $gains = ['total' => $totalGains,
                   'last'  => $lastGains
                 ];
@@ -176,7 +187,7 @@ class MoneyController extends Controller
      */
     public function edit(Money $money)
     {
-        //
+
     }
 
     /**

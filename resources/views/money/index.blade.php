@@ -98,7 +98,6 @@
 @stop
 
 @section('js')
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
 <script>
     function setTypes(types){
@@ -108,10 +107,8 @@
             var typeId = type[1];
             var typeValue = type[2];
             totalValue+=typeValue;
-
             $('.'+moneyId+typeId).text(typeValue);
         });
-        $('.totalValue-'+types[0][0]).text(totalValue);
         $('.startDate-'+types[0][0]).text(types[0][3]);
 
 
@@ -144,14 +141,28 @@
         });
     }
     $( document ).ajaxStop(function() {
-        if({!! $moneyLen !!} > 0){
+        var money = {!! $money !!};
+        var moneyChild = {!! $moneyChild !!};
+
+        for (let i = 0; i < money.length; i++) {
+            var sum = 0;
+            for (let j = 0; j < moneyChild.length; j++) {
+                if(money[i]['id'] == moneyChild[j]['parent_id']){
+                    sum+=parseInt(moneyChild[j]['account_balance']);
+                }
+            }
+            $('.totalValue-'+money[i]['id']).text(sum);
+            console.log(sum);
+        }
+
+        if(money.length > 0){
             $('.total-allgain').text(
-            parseInt($('.totalValue-'+{!! $money !!}[0]['id']).text()) -
-            parseInt($('.totalValue-'+{!! $money !!}[{!! $moneyLen !!}-1]['id']).text())
+            parseInt($('.totalValue-'+money[0]['id']).text()) -
+            parseInt($('.totalValue-'+money[money.length - 1]['id']).text())
         );
         $('.allgain').text(
-            parseInt($('.totalValue-'+{!! $money !!}[0]['id']).text()) -
-            parseInt($('.totalValue-'+{!! $money !!}[1]['id']).text())
+            parseInt($('.totalValue-'+money[0]['id']).text()) -
+            parseInt($('.totalValue-'+money[1]['id']).text())
         );
         }
    });
