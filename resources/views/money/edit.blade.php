@@ -1,8 +1,9 @@
 @extends('adminlte::page')
 
-@section('title', 'Games')
+@section('title', 'Money')
 
 @section('content_header')
+
 @stop
 
 @section('content')
@@ -10,27 +11,33 @@
 <body>
 <div class="container">
 
-<h1>Edit: {{ $game->name }}</h1>
 
 <!-- if there are creation errors, they will show here -->
 {{ HTML::ul($errors->all()) }}
 
-{{ Form::model($game, array('route' => array('games.update', $game->id), 'method' => 'PUT')) }}
+@foreach ($money as $m)
+<h1>Edit: {{ $m->money_type_id }}</h1>
 
-    <div class="form-group">
-        {{ Form::label('name', 'Name') }}
-        {{ Form::text('name', null, array('class' => 'form-control')) }}
-    </div>
+{{ Form::model($m, array('route' => array('money.update', $m->id), 'method' => 'PUT')) }}
 
-    <div class="form-group">
-        {{ Form::label('description', 'Description') }}
-        {{ Form::text('description', null, array('class' => 'form-control')) }}
-    </div>
+<div class="form-group">
+    {{ Form::label('name', $m->money_type_id) }}
+    {{ Form::text('account_balance', $m->account_balance, array('class' => 'form-control')) }}
+</div>
 
-    {{ Form::submit('Edit the game!', array('class' => 'btn btn-primary')) }}
+<button type="submit" display="none" class="btn btn-primary sub">Edit the money</button>
 
 {{ Form::close() }}
+@endforeach
+
+<button type="submit" class="btn btn-primary submitAll">Edit the money</button>
+
 
 </div>
 </body>
 @stop
+
+<script>
+
+
+</script>

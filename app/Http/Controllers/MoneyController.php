@@ -185,9 +185,10 @@ class MoneyController extends Controller
      * @param  \App\Money  $money
      * @return \Illuminate\Http\Response
      */
-    public function edit(Money $money)
+    public function edit($id)
     {
-
+        $money = Money::where('parent_id', $id)->get();
+        return view('money.edit', compact('money'));
     }
 
     /**
@@ -199,7 +200,7 @@ class MoneyController extends Controller
      */
     public function update(Request $request, Money $money)
     {
-        //
+
     }
 
     /**
@@ -210,6 +211,7 @@ class MoneyController extends Controller
      */
     public function destroy(Money $money)
     {
+        dd($money);
         //
     }
 }
