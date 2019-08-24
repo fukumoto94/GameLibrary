@@ -200,9 +200,11 @@ class MoneyController extends Controller
      */
     public function update(Request $request, Money $money)
     {
-
+        dd($request);
     }
-
+    public function moneyEdit(Request $request){
+        dd($request->json()->all());
+    }
     /**
      * Remove the specified resource from storage.
      *
